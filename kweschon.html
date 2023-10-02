@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question and Answer</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        #qaContainer {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1, h2, p, label, input, button, a {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .question {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        #result {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        #happyBirthday {
+            font-size: 36px;
+            color: green;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="qaContainer">
+        <h1>Q&A Example</h1>
+
+        <form id="qaForm">
+            <div id="question1" class="question active">
+                <h2>Question 1:</h2>
+                <p>Sino ka?</p>
+                <label for="answer1">Your Answer:</label>
+                <input type="text" id="answer1" name="answer1">
+                <button type="button" id="submit1">Submit Answer</button>
+                <div id="result1" class="result"></div> <!-- Response for question 1 -->
+            </div>
+
+            <div id="question2" class="question">
+                <h2>Question 2:</h2>
+                <p>Ilang taon ka na?</p>
+                <label for="answer2">Your Answer:</label>
+                <input type="text" id="answer2" name="answer2">
+                <button type="button" id="submit2">Submit Answer</button>
+                <div id="result2" class="result"></div> <!-- Response for question 2 -->
+            </div>
+
+            <div id="question3" class="question">
+                <h2>Question 3:</h2>
+                <p>Birthday mo diba?</p>
+                <label for="answer3">Your Answer:</label>
+                <input type="text" id="answer3" name="answer3">
+                <button type="button" id="submit3">Submit Answer</button>
+                <div id="result3" class="result"></div> <!-- Response for question 3 -->
+            </div>
+
+            <div id="happyBirthday">
+                HAPPY BIRTHDAY!!!
+            </div>
+            
+            <a href="https://jellyaceee.github.io/Surprise/aceee.html?fbclid=IwAR2PnVg1nwQnaH7Vvf_me719Gc-g2sIznaMT7iFz1t6SEVrn0Tg8TWOeGME" id="claimGiftLink" style="display: none; font-size: 36px; color: blue; text-decoration: underline;">Click this to claim your gift</a>
+        </form>
+    </div>
+
+    <script>
+        var correctAnswers = {
+            question1: "kwiniii",
+            question2: "18",
+            question3: ["yes", "oo"]
+        };
+
+        var currentQuestion = 1;
+
+        function showQuestion(questionNumber) {
+            var questionElements = document.querySelectorAll('.question');
+            questionElements.forEach(function(questionElement) {
+                questionElement.classList.remove('active');
+            });
+
+            var questionId = "question" + questionNumber;
+            document.getElementById(questionId).classList.add('active');
+        }
+
+        function showNextQuestion() {
+            currentQuestion++;
+            if (currentQuestion <= 3) {
+                showQuestion(currentQuestion);
+            } else if (currentQuestion === 4) {
+                document.getElementById("happyBirthday").style.display = "block";
+                document.getElementById("claimGiftLink").style.display = "block"; // Display the gift link
+            }
+        }
+
+        function enableSubmitButton(questionNumber) {
+            document.getElementById("submit" + questionNumber).disabled = false;
+        }
+
+        // Button click handlers for all questions
+        for (var i = 1; i <= 3; i++) {
+            (function(questionNumber) {
+                var submitButtonId = "submit" + questionNumber;
+                var answerId = "answer" + questionNumber;
+                var resultId = "result" + questionNumber;
+
+                var submitButton = document.getElementById(submitButtonId);
+                var answerInput = document.getElementById(answerId);
+                var resultElement = document.getElementById(resultId);
+
+                submitButton.addEventListener("click", function() {
+                    var userAnswer = answerInput.value.trim().toLowerCase();
+
+                    // Check if the user's answer matches any correct answer for Question 3
+                    if (correctAnswers["question" + questionNumber].includes(userAnswer)) {
+                        resultElement.innerHTML = "Okay";
+                        resultElement.style.color = "green"; // Display correct response in green
+                        answerInput.disabled = true; // Disable input field
+                        submitButton.disabled = true; // Disable current button
+                        showNextQuestion();
+                    } else {
+                        resultElement.innerHTML = "Oh talaga ba? Male";
+                        resultElement.style.color = "red"; // Display incorrect response in red
+                        enableSubmitButton(questionNumber); // Enable submit button on incorrect answer
+                    }
+                });
+
+                // Input field change event listener
+                answerInput.addEventListener("input", function() {
+                    clearResponse(questionNumber); // Clear the response when the user edits their answer
+                });
+            })(i);
+        }
+
+        // Show the first question initially
+        showQuestion(currentQuestion);
+
+        function clearResponse(questionNumber) {
+            var resultId = "result" + questionNumber;
+            var resultElement = document.getElementById(resultId);
+            resultElement.innerHTML = ""; // Clear the response
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
